@@ -1,0 +1,531 @@
+// in post create
+    // Building the Select Tool
+      // Imported as default widget and configured
+      // ** Note it should be reading selectionColor from config.json but is not
+      this.inherited(arguments);
+      this.config.selectionColor = "#00FFFF";
+      var selectionColor = new Color(this.config.selectionColor);
+      console.log(this.config.selectionColor);
+      this.defaultPointSymbol = new SimpleMarkerSymbol(
+        SimpleMarkerSymbol.STYLE_CIRCLE,
+        16,
+        null,
+        selectionColor
+      );
+      this.defaultLineSymbol = new SimpleLineSymbol(
+        SimpleLineSymbol.STYLE_SOLID,
+        selectionColor,
+        2
+      );
+      this.defaultFillSymbol = new SimpleFillSymbol(
+        SimpleFillSymbol.STYLE_SOLID,
+        this.defaultLineSymbol,
+        new Color([selectionColor.r, selectionColor.g, selectionColor.b, 0.3])
+      );
+      /**
+       * Helper object to keep which layer is selectable.
+       */
+      this.layerMapper = {};
+      this.layerInfoArray = [];
+      this.layerItems = [];
+
+      this.selectDijit = new FeatureSetChooserForMultipleLayers({
+        map: this.map,
+        updateSelection: true,
+        fullyWithin: this.config.selectionMode === "wholly"
+      });
+
+      html.place(this.selectDijit.domNode, this.selectDijitNode);
+      this.selectDijit.startup();
+
+      this.own(
+        on(
+          this.selectDijit,
+          "user-clear",
+          lang.hitch(this, this._clearAllSelections)
+        )
+      );
+      this.own(
+        on(
+          this.selectDijit,
+          "loading",
+          lang.hitch(this, function() {
+            //this.shelter.show();
+          })
+        )
+      );
+      this.own(
+        on(
+          this.selectDijit,
+          "unloading",
+          lang.hitch(this, function() {
+            //this.shelter.hide();
+            this.getSQL(
+              this.layerItems,
+              rChkBx.checked,
+              sChkBx.checked,
+              lChkBx.checked,
+              uChkBx.checked
+            );
+          })
+        )
+      );
+
+      this.viewStack = new ViewStack({
+        viewType: "dom",
+        views: [this.layerListNode, this.detailsNode]
+      });
+      html.place(this.viewStack.domNode, this.domNode);
+
+      this.own(
+        on(
+          this.switchBackBtn,
+          "click",
+          lang.hitch(this, this._switchToLayerList)
+        )
+      );
+
+      this._switchToLayerList();
+      //this.shelter.show();
+
+      var layerInfosObject = LayerInfos.getInstanceSync();
+
+      layerUtil.getLayerInfoArray(layerInfosObject).then(
+        lang.hitch(this, function(layerInfoArray) {
+          //First loaded, reset selectableLayerIds
+          this._initLayers(layerInfoArray);
+        })
+      );
+
+      this.own(
+        on(
+          layerInfosObject,
+          "layerInfosChanged",
+          lang.hitch(this, function() {
+            //this.shelter.show();
+
+            layerUtil.getLayerInfoArray(layerInfosObject).then(
+              lang.hitch(this, function(layerInfoArray) {
+                this._initLayers(layerInfoArray);
+              })
+            );
+          })
+        )
+      );
+
+      this.own(
+        on(
+          layerInfosObject,
+          "layerInfosIsShowInMapChanged",
+          lang.hitch(this, this._layerVisibilityChanged)
+        )
+      );
+
+      this.own(
+        on(this.map, "zoom-end", lang.hitch(this, this._layerVisibilityChanged))
+      );
+
+
+      
+      //Custom Functions
+      onDeActive: function() {
+        this.selectDijit.deactivate();
+        this._restoreSelectionSymbol();
+      },
+  
+      onActive: function() {
+        this._setSelectionSymbol();
+      },
+  
+      onDestroy: function() {
+        this._clearAllSelections();
+      },
+  
+      _initLayers: function(layerInfoArray) {
+        this.layerInfoArray = layerInfoArray;
+        this.layerItems = [];
+        this.selectionSymbols = {};
+  
+        html.empty(this.layerItemsNode);
+  
+        array.forEach(
+          layerInfoArray,
+          lang.hitch(this, function(layerInfo) {
+            var visible = layerInfo.isShowInMap() && layerInfo.isInScale();
+  
+            var item = new SelectableLayerItem({
+              layerInfo: layerInfo,
+              checked: true,
+              layerVisible: visible,
+              folderUrl: this.folderUrl,
+              allowExport: this.config ? this.config.allowExport : false,
+              map: this.map,
+              nls: this.nls
+            });
+  
+            this.own(
+              on(item, "switchToDetails", lang.hitch(this, this._switchToDetails))
+            );
+            this.own(
+              on(
+                item,
+                "stateChange",
+                lang.hitch(this, function() {
+                  //this.shelter.show();
+                  this._getSelectableLayers().then(
+                    lang.hitch(this, function(layerObjects) {
+                      this.selectDijit.setFeatureLayers(layerObjects);
+                      //this.shelter.hide();
+                    })
+                  );
+                })
+              )
+            );
+            html.place(item.domNode, this.layerItemsNode);
+            item.startup();
+  
+            this.layerItems.push(item);
+          })
+        );
+  
+        this._getSelectableLayers().then(
+          lang.hitch(this, function(layerObjects) {
+            this.selectDijit.setFeatureLayers(layerObjects);
+            //this.shelter.hide();
+          })
+        );
+  
+        this._getLayerObjects().then(
+          lang.hitch(this, function(layerObjects) {
+            array.forEach(
+              layerObjects,
+              function(layerObject) {
+                if (!layerObject.getSelectionSymbol()) {
+                  this._setDefaultSymbol(layerObject);
+                }
+  
+                var symbol = layerObject.getSelectionSymbol();
+                //this.selectionSymbols[layerObject.id] = symbol.toJson();
+              },
+              this
+            );
+  
+            this._setSelectionSymbol();
+          })
+        );
+      },
+  
+      _setSelectionSymbol: function() {
+        this._getLayerObjects().then(
+          lang.hitch(this, function(layerObjects) {
+            array.forEach(
+              layerObjects,
+              function(layerObject) {
+                this._setDefaultSymbol(layerObject);
+              },
+              this
+            );
+          })
+        );
+      },
+  
+      _setDefaultSymbol: function(layerObject) {
+        if (
+          layerObject.geometryType === "esriGeometryPoint" ||
+          layerObject.geometryType === "esriGeometryMultipoint"
+        ) {
+          layerObject.setSelectionSymbol(this.defaultPointSymbol);
+        } else if (layerObject.geometryType === "esriGeometryPolyline") {
+          layerObject.setSelectionSymbol(this.defaultLineSymbol);
+        } else if (layerObject.geometryType === "esriGeometryPolygon") {
+          layerObject.setSelectionSymbol(this.defaultFillSymbol);
+        } else {
+          console.warn("unknown geometryType: " + layerObject.geometryType);
+        }
+      },
+  
+      _restoreSelectionSymbol: function() {
+        this._getLayerObjects().then(
+          lang.hitch(this, function(layerObjects) {
+            array.forEach(
+              layerObjects,
+              function(layerObject) {
+                var symbolJson = this.selectionSymbols[layerObject.id];
+                if (symbolJson) {
+                  layerObject.setSelectionSymbol(
+                    SymbolJsonUtils.fromJson(symbolJson)
+                  );
+                }
+              },
+              this
+            );
+          })
+        );
+      },
+  
+      _layerVisibilityChanged: function() {
+        array.forEach(
+          this.layerItems,
+          function(layerItem) {
+            layerItem.updateLayerVisibility();
+          },
+          this
+        );
+      },
+  
+      _getSelectableLayers: function() {
+        var retDef = new Deferred();
+  
+        var selectedLayerInfo = [];
+        array.forEach(
+          this.layerItems,
+          function(layerItem) {
+            if (layerItem.isLayerVisible() && layerItem.isChecked()) {
+              selectedLayerInfo.push(layerItem.layerInfo);
+            }
+          },
+          this
+        );
+  
+        this._getLayerObjects(selectedLayerInfo).then(function(layerObjects) {
+          retDef.resolve(layerObjects);
+        });
+  
+        return retDef;
+      },
+  
+      _clearAllSelections: function() {
+        this.trafficSQL.value = "";
+        this.colorQuery.where = "";
+        for (var i = 0; i < window.selected.length; i++) {
+          window.selected.splice(i, 1);
+        }
+        var selectionMgr = SelectionManager.getInstance();
+        this._getLayerObjects().then(function(layerObjects) {
+          array.forEach(layerObjects, function(layerObject) {
+            selectionMgr.clearSelection(layerObject);
+          });
+        });
+        window.linkarrayndx = 0;
+        window.selectnum = 0;
+      },
+  
+      _getLayerObjects: function(layerInfoArray) {
+        var retDef = new Deferred();
+  
+        if (!layerInfoArray) {
+          layerInfoArray = this.layerInfoArray;
+        }
+  
+        var defs = array.map(layerInfoArray, function(layerInfo) {
+          return layerInfo.getLayerObject();
+        });
+  
+        all(defs).then(function(layerObjects) {
+          retDef.resolve(layerObjects);
+        });
+  
+        return retDef;
+      },
+  
+      _switchToDetails: function(layerItem) {
+        html.empty(this.featureContent);
+        window.viewStack.switchView(1);
+        this.selectedLayerName.innerHTML = layerItem.layerName;
+  
+        layerItem.layerInfo.getLayerObject().then(
+          lang.hitch(this, function(layerObject) {
+            var selectedFeatures = layerObject.getSelectedFeatures();
+            if (selectedFeatures.length > 0) {
+              array.forEach(
+                selectedFeatures,
+                lang.hitch(this, function() {
+                  var item = new FeatureItem({
+                    //graphic: feature,
+                    map: this.map,
+                    featureLayer: layerObject,
+                    displayField: layerObject.displayField,
+                    objectIdField: layerObject.objectIdField,
+                    allowExport: this.config ? this.config.allowExport : false,
+                    nls: this.nls
+                  });
+                  html.place(item.domNode, this.featureContent);
+                  item.startup();
+                })
+              );
+            }
+            this.getSQL(this.layerItems); //dave note
+          })
+        );
+      },
+  
+      _switchToLayerList: function() {
+        this.viewStack.switchView(0);
+      },
+  
+      getSQL: function(layerItems, rcheck, scheck, lcheck, ucheck) {
+        var selectedlist = "(";
+        console.log(this.layerItems);
+        //this is where the user selects the layer
+        this.layerItems[0].layerInfo.getLayerObject().then(
+          lang.hitch(this, function(layerObject) {
+            // controls the layer from which we select, need to change this.layerItems[0] index
+  
+            var selectedFeatures = layerObject.getSelectedFeatures();
+            window.selectndx = 0;
+  
+            if (selectedFeatures.length > 0) {
+              //* fill selected array
+              var nextlrs = "";
+              array.forEach(
+                selectedFeatures,
+                lang.hitch(this, function(feature) {
+                  nextlrs = feature.attributes.LRSID;
+                  window.selected[window.selectndx] = nextlrs;
+                  window.selectndx = window.selectndx + 1;
+                })
+              );
+              /**************  END OF FILL SELECTED SET ARRAY*/
+  
+              //if linkarray is empty
+              if (window.linkarrayndx == -1) {
+                for (i = 0; i < window.selectndx; i++) {
+                  if (rcheck || scheck || lcheck || ucheck) {
+                    if (rcheck) {
+                      window.linkarray.push(window.selected[i] + "R");
+                      window.linkarrayndx = window.linkarrayndx + 1;
+                    }
+                    if (scheck) {
+                      window.linkarray.push(window.selected[i] + "S");
+                      window.linkarrayndx = window.linkarrayndx + 1;
+                    }
+                    if (lcheck) {
+                      window.linkarray.push(window.selected[i] + "L");
+                      window.linkarrayndx = window.linkarrayndx + 1;
+                    }
+                    if (ucheck) {
+                      window.linkarray.push(window.selected[i] + "U");
+                      window.linkarrayndx = window.linkarrayndx + 1;
+                    }
+                  } else {
+                    window.linkarray.push(window.selected[i]);
+                    window.linkarrayndx = window.linkarrayndx + 1;
+                  }
+                }
+              }
+              //if linkarray not empty
+              else {
+                var linkloop = window.linkarrayndx;
+                for (i = 0; i < window.selectndx; i++) {
+                  selectedbefore = "no";
+  
+                  for (j = 0; j <= linkloop; j++) {
+                    if (
+                      window.selected[i] == window.linkarray[j] ||
+                      window.selected[i] == window.linkarray[j].substring(0, 16)
+                    ) {
+                      selectedbefore = "yes";
+                    }
+                  }
+                  if (selectedbefore == "no") {
+                    if (rcheck || scheck || lcheck || ucheck) {
+                      if (rcheck) {
+                        window.linkarrayndx = window.linkarrayndx + 1;
+                        window.linkarray.push(window.selected[i] + "R");
+                      }
+                      if (scheck) {
+                        window.linkarrayndx = window.linkarrayndx + 1;
+                        window.linkarray.push(window.selected[i] + "S");
+                      }
+                      if (lcheck) {
+                        window.linkarrayndx = window.linkarrayndx + 1;
+                        window.linkarray.push(window.selected[i] + "L");
+                      }
+                      if (ucheck) {
+                        window.linkarrayndx = window.linkarrayndx + 1;
+                        window.linkarray.push(window.selected[i] + "U");
+                      }
+                    } else {
+                      window.linkarrayndx = window.linkarrayndx + 1;
+                      window.linkarray.push(window.selected[i]);
+                    }
+                  }
+                }
+              }
+  
+              window.linkarray.sort();
+              window.selected.sort();
+              window.temparrayndx = -1;
+  
+              linkloop = window.linkarrayndx;
+              for (i = 0; i < window.selectndx; i++) {
+                for (j = 0; j <= linkloop; j++) {
+                  if (
+                    window.selected[i] == window.linkarray[j].substring(0, 16) ||
+                    window.selected[i] == window.linkarray[j]
+                  ) {
+                    window.temparrayndx = window.temparrayndx + 1;
+                    window.temparray[temparrayndx] = window.linkarray[j];
+                  }
+                }
+              }
+              window.linkarray = window.temparray;
+              window.linkarrayndx = window.temparrayndx;
+            }
+          })
+        );
+  
+        if (this.colorQuery.where == "") {
+          this.trafficSQL.value = "";
+          var stop = window.selected.length;
+          for (var i = 0; i < stop; i++) {
+            if (rcheck || scheck || lcheck || ucheck) {
+              if (rcheck) {
+                window.selected.push(window.selected[i] + "R");
+              }
+              if (scheck) {
+                window.selected.push(window.selected[i] + "S");
+              }
+              if (lcheck) {
+                window.selected.push(window.selected[i] + "L");
+              }
+              if (ucheck) {
+                window.selected.push(window.selected[i] + "U");
+              }
+            }
+            this.trafficSQL.value += "'" + window.selected[i];
+  
+            this.trafficSQL.value += "',";
+          }
+  
+          if (this.trafficSQL.value.indexOf("LRSID in") == -1) {
+            this.trafficSQL.value = "LRSID in (" + this.trafficSQL.value;
+          }
+  
+          if (this.trafficSQL.value.indexOf(")") == -1) {
+            this.trafficSQL.value = this.trafficSQL.value.slice(0, -1);
+            this.trafficSQL.value += ")";
+          }
+          window.trafficSQL.value = this.trafficSQL.value;
+          window.boolcheck = false;
+          console.log("yup");
+        } else if (this.colorQuery.where != "") {
+          var temporaryColorQuery = this.colorQuery.where;
+          temporaryColorQuery = temporaryColorQuery.slice(0, -1);
+          temporaryColorQuery += ",";
+  
+          this.trafficSQL.value = "";
+  
+          for (var i = 0; i < window.selected.length; i++) {
+            this.trafficSQL.value += "'" + window.selected[i] + "',";
+          }
+  
+          if (this.trafficSQL.value.indexOf(")") == -1) {
+            this.trafficSQL.value = this.trafficSQL.value.slice(0, -1);
+            this.trafficSQL.value += ")";
+          }
+  
+          this.trafficSQL.value = temporaryColorQuery + this.trafficSQL.value;
+          window.boolcheck = true;
+        }
+      },

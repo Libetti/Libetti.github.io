@@ -1,0 +1,54 @@
+<div data-dojo-type="dijit/layout/ContentPane" style="width:100%; height:100%;">
+    <style>
+        .button{
+            background-color: #008000; /* Green */
+            border-style: solid;
+            border-width: 2px;
+            border-color:black;
+            border-radius:5px;
+            color: white;
+            padding: 3px 3px;
+            text-align: center;
+            display: inline-block;
+            font-size: 13px;
+            margin-bottom:5px;
+
+        }
+        .button:active{
+           box-shadow: 0 3px #666;
+           transform: translateY(1px); 
+        }
+        
+        
+        .dgrid-row-odd{
+           background: #F2F5F9;
+        }
+        
+        .dgrid-cell{
+            border:none;
+            font-size:14px;
+        }
+        
+        .field-LRSID{
+            width:10.5em;
+        }
+        .field-dow{
+            width:3.5em;
+        }
+        .field-Hour{
+            width:3.75em;
+        }
+        .field-avgVOLUME, .field-maxVOLUME, .field-minVOLUME, .field-StdDevVOLUME, .field-LRSID{
+            font-weight:bold;
+        }
+    
+    </style>
+    <input class="button" type="button" value="Load Data" id="getquery" data-dojo-attach-point="getquery1" />
+    <input class="button" type="button" value="Export to .csv" id="csv" data-dojo-attach-point="csv" />
+    <br>
+    
+    <br>
+    <div id="grid1"></div>
+
+
+</div>

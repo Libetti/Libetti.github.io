@@ -1,0 +1,622 @@
+<div data-dojo-type="dijit/layout/BorderContainer">
+  <style type="text/css">
+    /* Save filter button styling */
+    label {
+      display: block;
+    }
+
+    input {
+      background-color: #ffffff;
+    }
+
+    p {
+      background-color: #f2f2f2;
+    }
+
+    hr {
+      background-color: #f2f2f2;
+      background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
+      border: 0;
+      height: 1px;
+    }
+
+    div {
+      font: 12px Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    select {
+      appearance: none;
+      border-radius: 4px;
+      -webkit-box-shadow: 0 1px 0 #ccc, 0 -1px #fff inset;
+      -moz-box-shadow: 0 1px 0 #ccc, 0 -1px #fff inset;
+      -webkit-border-radius: 4px;
+      -moz-border-radius: 4px;
+      box-shadow: 0 3px 0 #ccc, 0 -1px #fff inset;
+      background: white;
+      color: black;
+      cursor: pointer;
+      padding: 1px;
+      margin: 0;
+      border: none;
+      outline: none;
+      display: inline-block;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+    }
+
+    .greenButtons {
+      background-color: #008000;
+      /* Green */
+      border-style: solid;
+      border-width: 2px;
+      border-color: black;
+      border-radius: 5px;
+      color: white;
+      display: inline-block;
+      font-size: 13px;
+      margin: 2px;
+      padding: 3px 3px;
+      text-align: center;
+    }
+
+    /* Delete filter button styling */
+    .redButtons {
+      background-color: #f44336;
+      /* Red */
+      border-style: solid;
+      border-width: 2px;
+      border-color: black;
+      border-radius: 5px;
+      color: white;
+      display: inline-block;
+      font-size: 13px;
+      margin: 2px;
+      padding: 3px 3px;
+      text-align: center;
+    }
+
+    .redButtons:active {
+      box-shadow: 0 3px #666;
+      transform: translateY(1px);
+    }
+
+    .greenButtons:active {
+      box-shadow: 0 3px #666;
+      transform: translateY(1px);
+    }
+
+    .droplist {
+      margin: 2px;
+    }
+
+    .txtprompt {
+      margin: 2px;
+    }
+
+    .left {
+      float: left;
+    }
+
+    .clear {
+      clear: both;
+    }
+
+    .clearChecksBtn:active {
+      box-shadow: 0 3px #666;
+      transform: translateY(1px);
+    }
+
+    #srcDescription {
+      background-color: #f2f2f2;
+    }
+
+    /* Show the snackbar when clicking on a button (class added with JavaScript) */
+    .show {
+      visibility: visible !important;
+      /* Show the snackbar */
+
+      -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+      animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    }
+
+    #err {
+      bottom: 20px;
+      color: #f44336;
+      font-size: 35px;
+      font-weight: bolder;
+      position: relative;
+      text-align: left;
+    }
+
+    #wrapper {
+      position: absolute;
+    }
+
+    /* The snackbar - position it at the bottom and in the middle of the screen */
+    #notification {
+      background-color: #353535;
+      border-radius: 2px;
+      color: #fff;
+      height: 40px;
+      min-width: 220px;
+      text-align: center;
+      padding: 16px;
+      visibility: hidden;
+      z-index: 2;
+    }
+
+    #bottomPane {
+      height: 200px;
+    }
+
+    /* Animations to fade the snackbar in and out */
+
+    @keyframes fadein {
+      from {
+        opacity: 0;
+      }
+
+      to {
+
+        opacity: 1;
+      }
+    }
+
+    @keyframes fadeout {
+      from {
+
+        opacity: 1;
+      }
+
+      to {
+        opacity: 0;
+      }
+    }
+  </style>
+
+  <div id="wrapper">
+    <div style="position:fixed;" id="notification">
+      <span id="err">&#9888;</span>
+      &nbsp;&nbsp;&nbsp;
+      <div style="float:right"></div>
+    </div>
+  </div>
+
+  <div data-dojo-type="dijit/layout/TabContainer" id="tabContainer">
+    <div data-dojo-type="dijit/layout/ContentPane" title="Create Filter" id="filtTab" data-dojo-props="selected:true">
+      <p>
+        <label><b>User: </b> </label>
+        <input class=" txtprompt" type="text" name="TheUserf" placeholder="Username" id="TheUserf"
+          data-dojo-attach-point="TheUserf" /><br />
+        <label x="30"><b>Current Filter: </b></label>
+        <input class="txtprompt" type="text" name="CurrentFilterf" placeholder="None" id="CurrentFilterf"
+          data-dojo-attach-point="CurrentFilterf" />&nbsp;&nbsp;
+        <br />
+
+        <label><b>Description:</b></label>
+        <input class="txtprompt" type="text" name="descripTextf" id="descripTextf" placeholder="None"
+          data-dojo-attach-point="descripTextf" />
+        <br />
+
+        <b>Available Filters:</b>
+        <select id="filterDropListf" name="filterDropListf" placeholder="Select a Filter"
+          data-dojo-attach-point="filterDropListf">
+          <OPTION SELECTED>none</OPTION>
+        </select>
+
+        <br />
+
+        <b>Sources: </b>
+        <select class="droplist" name="sourceDropList" id="sourceDropList" data-dojo-attach-point="sourceDropList"
+          data-dojo-attach-event="onchange:updateCustomFilter">
+          <OPTION VALUE="none">none</OPTION>
+          <OPTION VALUE="TMC Device">TMC Device</OPTION>
+          <OPTION VALUE="Speeds">Speeds</OPTION>
+          <OPTION VALUE="Bluetooth">BlueTooth</OPTION>
+          <OPTION VALUE="DE ATR AADT">DE ATR AADT</OPTION>
+          <OPTION VALUE="NPMRDS">NPMRDS</OPTION>
+          <OPTION VALUE="Intersection Counts" disabled>Intersection Counts</OPTION>
+          <OPTION VALUE="Traffic Studies" disabled>Traffic Studies</OPTION>
+          <OPTION VALUE="DE Vehicle GPS" disabled>DE Vehicle GPS</OPTION>
+          <OPTION VALUE="FHA Trav Time" disabled>FHA Trav Time</OPTION>
+          <OPTION VALUE="DE ATR Hourly" disabled>DE ATR Hourly</OPTION>
+          <OPTION VALUE="TOMP" disabled>TOMP</OPTION>
+          <OPTION VALUE="UD Engineering" disabled>UD Engineering</OPTION>
+        </select>
+      </p>
+      <div>
+        <div class="left">
+          <label><b>Begin Date:</b></label>
+          <input style="background-color: #f2f2f2;" type=" text" value="2017-09-01" name="begindatepicker"
+            class="datepicker" data-dojo-attach-point="begindatepicker" data-dojo-type="dijit/form/DateTextBox"
+            required="true" />
+          <div class="clear">&nbsp;</div>
+          <label><b>End Date:</b></label>
+          <input style="background-color: #f2f2f2;" type="text" value="2017-09-07" name="enddatepicker"
+            class="datepicker" data-dojo-attach-point="enddatepicker" data-dojo-type="dijit/form/DateTextBox"
+            required="true" />
+        </div>
+      </div>
+      <div class="clear">&nbsp;</div>
+
+      <!-- <b>Interval: </b> <br>
+      <input type="radio" id="int0ChkBx" name="interval" value="0" data-dojo-attach-point="int0ChkBx"
+        data-dojo-attach-event="onclick:updateCustomFilter" /> 0 min
+      <input type="radio" id="int5ChkBx" name="interval" value="5" data-dojo-attach-point="int5ChkBx"
+        data-dojo-attach-event="onclick:updateCustomFilter" /> 5 min
+      <input type="radio" id="int15ChkBx" name="interval" value="15" data-dojo-attach-point="int15ChkBx"
+        data-dojo-attach-event="onclick:updateCustomFilter" /> 15 min
+      <input type="radio" id="hrintChkBx" name="interval" value="60" data-dojo-attach-point="hrintChkBx"
+        data-dojo-attach-event="onclick:updateCustomFilter" /> 1 hour
+      <input type="radio" id="dayintChkBx" name="interval" value="24" data-dojo-attach-point="dayintChkBx"
+        data-dojo-attach-event="onclick:updateCustomFilter" /> Day &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -->
+
+      <!-- <br /> -->
+      <p>
+        <b>Group By Variable 1: </b>
+        <select class="droplist" id="byvar1DropList" data-dojo-attach-point="byvar1DropList" WIDTH="20"
+          data-dojo-attach-event="onchange:updateCustomFilter">
+          <OPTION VALUE="none">none</OPTION>
+          <OPTION VALUE="dow">Day of Week</OPTION>
+          <OPTION VALUE="Month">Month</OPTION>
+          <OPTION VALUE="Hour">Hour</OPTION>
+          <OPTION VALUE="Year">Year</OPTION>
+        </select>
+
+        <br />
+
+        <b>Group By Variable 2: </b>
+        <select class="droplist" NAME="byvar2DropList" id="byvar2DropList" data-dojo-attach-point="byvar2DropList"
+          WIDTH="20" data-dojo-attach-event="onchange:updateCustomFilter">
+          <OPTION VALUE="none">none</OPTION>
+          <OPTION VALUE="dow">Day of Week</OPTION>
+          <OPTION VALUE="Month">Month</OPTION>
+          <OPTION VALUE="Hour">Hour</OPTION>
+          <OPTION VALUE="Year">Year</OPTION>
+        </select><br />
+        <b>Summary Type: </b>
+        <SELECT class="droplist" NAME="aggtypeDropList" id="aggtypeDropList" data-dojo-attach-point="aggtypeDropList"
+          WIDTH="20" data-dojo-attach-event="onchange:updateCustomFilter">
+          <OPTION VALUE="none">none</OPTION>
+          <OPTION VALUE="Sum">Sum</OPTION>
+          <OPTION VALUE="Average">Average</OPTION>
+          <OPTION VALUE="Min">Min</OPTION>
+          <OPTION VALUE="Max">Max</OPTION>
+        </SELECT>
+        <div>
+          <input type="button" name="saveFilter" value="Save Filter" class="greenButtons"
+            data-dojo-attach-event="onclick:saveFilt" />
+          <input type="button" value="Delete Filter" id="delFilter" class="redButtons"
+            data-dojo-attach-point="delFilter" />
+        </div>
+      </p>
+      <hr>
+
+      <P>
+        <input type="button" value="Clear Checkboxes" id="clearChecks" class="redButtons"
+          data-dojo-attach-event="onclick:clearChecks" /><br>
+      </P>
+
+      <p>
+        <b>Year: </b><br>
+        <input type="checkbox" id="yr2017ChkBx" value="17" name="year" data-dojo-attach-point="yr2017ChkBx"
+          data-dojo-attach-event="onclick:updateCustomFilter" /> 2017
+        <input type="checkbox" id="yr2016ChkBx" value="16" name="year" data-dojo-attach-point="yr2016ChkBx"
+          data-dojo-attach-event="onclick:updateCustomFilter" /> 2016
+        <input type="checkbox" id="yr2015ChkBx" value="15" name="year" data-dojo-attach-point="yr2015ChkBx"
+          data-dojo-attach-event="onclick:updateCustomFilter" /> 2015
+        <input type="checkbox" id="yr2014ChkBx" value="14" name="year" data-dojo-attach-point="yr2014ChkBx"
+          data-dojo-attach-event="onclick:updateCustomFilter" /> 2014
+        <input type="checkbox" id="yr2013ChkBx" value="13" name="year" data-dojo-attach-point="yr2013ChkBx"
+          data-dojo-attach-event="onclick:updateCustomFilter" /> 2013
+        <input type="checkbox" id="yr2012ChkBx" value="12" name="year" data-dojo-attach-point="yr2012ChkBx"
+          data-dojo-attach-event="onclick:updateCustomFilter" /> 2012
+        <input type="checkbox" id="yr2011ChkBx" value="11" name="year" data-dojo-attach-point="yr2011ChkBx"
+          data-dojo-attach-event="onclick:updateCustomFilter" /> 2011
+        <input type="checkbox" id="yr2010ChkBx" value="10" name="year" data-dojo-attach-point="yr2010ChkBx"
+          data-dojo-attach-event="onclick:updateCustomFilter" /> 2010
+        <input type="checkbox" id="yr2009ChkBx" value="9" name="year" data-dojo-attach-point="yr2009ChkBx"
+          data-dojo-attach-event="onclick:updateCustomFilter" /> 2009
+        <input type="checkbox" id="yr2008ChkBx" value="8" name="year" data-dojo-attach-point="yr2008ChkBx"
+          data-dojo-attach-event="onclick:updateCustomFilter" /> 2008
+      </p>
+      <hr>
+
+      <p>
+        <b>Period of Year: </b> <br>
+        <input type="checkbox" id="allyrChkBx" value="All Year" name="period" data-dojo-attach-point="allyrChkBx"
+          data-dojo-attach-event="onclick:updateCustomFilter" /> All Year
+        <input type="checkbox" id="schChkBx" value="School Year" name="period" data-dojo-attach-point="schChkBx"
+          data-dojo-attach-event="onclick:updateCustomFilter" /> School Year
+        <input type="checkbox" id="sumChkBx" value="Summer" name="period" data-dojo-attach-point="sumChkBx"
+          data-dojo-attach-event="onclick:updateCustomFilter" /> Summer
+        <input type="checkbox" id="frstChkBx" value="1st Qtr" name="period" data-dojo-attach-point="frstChkBx"
+          data-dojo-attach-event="onclick:updateCustomFilter" /> 1st Qtr
+        <input type="checkbox" id="secChkBx" value="2nd Qtr" name="period" data-dojo-attach-point="secChkBx"
+          data-dojo-attach-event="onclick:updateCustomFilter" /> 2nd Qtr
+        <input type="checkbox" id="thrdChkBx" value="3rd Qtr" name="period" data-dojo-attach-point="thrdChkBx"
+          data-dojo-attach-event="onclick:updateCustomFilter" /> 3rd Qtr
+        <input type="checkbox" id="frthChkBx" value="4th Qtr" name="period" data-dojo-attach-point="frthChkBx"
+          data-dojo-attach-event="onclick:updateCustomFilter" /> 4th Qtr
+      </p>
+      <hr>
+      <div class="monthbtn">
+        <p>
+          <b>Months: </b><br>
+          <input type="checkbox" id="janChkBx" name="month" value="01" data-dojo-attach-point="janChkBx"
+            data-dojo-attach-event="onclick:updateCustomFilter" />Jan
+          <input type="checkbox" id="febChkBx" name="month" value="02" data-dojo-attach-point="febChkBx"
+            data-dojo-attach-event="onclick:updateCustomFilter" />Feb
+          <input type="checkbox" id="marChkBx" name="month" value="03" data-dojo-attach-point="marChkBx"
+            data-dojo-attach-event="onclick:updateCustomFilter" />Mar
+          <input type="checkbox" id="aprChkBx" name="month" value="04" data-dojo-attach-point="aprChkBx"
+            data-dojo-attach-event="onclick:updateCustomFilter" />Apr
+          <input type="checkbox" id="mayChkBx" name="month" value="05" data-dojo-attach-point="mayChkBx"
+            data-dojo-attach-event="onclick:updateCustomFilter" />May
+          <input type="checkbox" id="junChkBx" name="month" value="06" data-dojo-attach-point="junChkBx"
+            data-dojo-attach-event="onclick:updateCustomFilter" />Jun
+          <input type="checkbox" id="julChkBx" name="month" value="07" data-dojo-attach-point="julChkBx"
+            data-dojo-attach-event="onclick:updateCustomFilter" />Jul
+          <input type="checkbox" id="augChkBx" name="month" value="08" data-dojo-attach-point="augChkBx"
+            data-dojo-attach-event="onclick:updateCustomFilter" />Aug
+          <input type="checkbox" id="sepChkBx" name="month" value="09" data-dojo-attach-point="sepChkBx"
+            data-dojo-attach-event="onclick:updateCustomFilter" />Sep
+          <input type="checkbox" id="octChkBx" name="month" value="10" data-dojo-attach-point="octChkBx"
+            data-dojo-attach-event="onclick:updateCustomFilter" />Oct
+          <input type="checkbox" id="novChkBx" name="month" value="11" data-dojo-attach-point="novChkBx"
+            data-dojo-attach-event="onclick:updateCustomFilter" />Nov
+          <input type="checkbox" id="decChkBx" name="month" value="12" data-dojo-attach-point="decChkBx"
+            data-dojo-attach-event="onclick:updateCustomFilter" />Dec
+        </p>
+      </div>
+      <hr>
+      <div class="daybtn">
+        <p>
+          <b>Days of the week: </b><br>
+          <input type="checkbox" id="wkdayChkBx" name="DOW" value="1 OR DOW = 2 OR DOW = 3 OR DOW = 4 OR DOW = 5"
+            data-dojo-attach-point="wkdayChkBx" data-dojo-attach-event="onclick:updateCustomFilter" /> Weekday&nbsp;
+          <input type="checkbox" id="wkendChkBx" name="DOW" value="6 OR DOW = 7" data-dojo-attach-point="wkendChkBx"
+            data-dojo-attach-event="onclick:updateCustomFilter" /> WeekEnd&nbsp;
+          <input type="checkbox" id="monChkBx" name="DOW" value="1" data-dojo-attach-point="monChkBx"
+            data-dojo-attach-event="onclick:updateCustomFilter" /> Mon&nbsp;
+          <input type="checkbox" id="tuesChkBx" name="DOW" value="2" data-dojo-attach-point="tuesChkBx"
+            data-dojo-attach-event="onclick:updateCustomFilter" /> Tues&nbsp;
+          <input type="checkbox" id="wedChkBx" name="DOW" value="3" data-dojo-attach-point="wedChkBx"
+            data-dojo-attach-event="onclick:updateCustomFilter" /> Wed&nbsp;
+          <input type="checkbox" id="thurChkBx" name="DOW" value="4" data-dojo-attach-point="thurChkBx"
+            data-dojo-attach-event="onclick:updateCustomFilter" /> Thur&nbsp;
+          <input type="checkbox" id="friChkBx" name="DOW" value="5" data-dojo-attach-point="friChkBx"
+            data-dojo-attach-event="onclick:updateCustomFilter" /> Fri&nbsp;
+          <input type="checkbox" id="satChkBx" name="DOW" value="6 " data-dojo-attach-point="satChkBx"
+            data-dojo-attach-event="onclick:updateCustomFilter" /> Sat&nbsp;
+          <input type="checkbox" id="sunChkBx" name="DOW" value="7" data-dojo-attach-point="sunChkBx"
+            data-dojo-attach-event="onclick:updateCustomFilter" /> Sun&nbsp;&nbsp;
+        </p>
+      </div>
+      <hr>
+      <p>
+        <b>Period of Day: </b><br>
+        <input type="checkbox" id="ampkChkBx" name="periodofday" value="7-9" data-dojo-attach-point="ampkChkBx"
+          data-dojo-attach-event="onclick:updateCustomFilter" />AM Pk(7-9)&nbsp;&nbsp;
+        <input type="checkbox" id="pmpkChkBx" name="periodofday" value="16-18" data-dojo-attach-point="pmpkChkBx"
+          data-dojo-attach-event="onclick:updateCustomFilter" />PM Pk(16-18)&nbsp;&nbsp;
+        <input type="checkbox" id="alldayChkBx" name="periodofday" value="All Day" data-dojo-attach-point="alldayChkBx"
+          data-dojo-attach-event="onclick:updateCustomFilter" />All
+        Day&nbsp;&nbsp;
+        <input type="checkbox" id="midChkBx" name="periodofday" value="10-15" data-dojo-attach-point="midChkBx"
+          data-dojo-attach-event="onclick:updateCustomFilter" />Mid day(10-15)&nbsp;&nbsp;
+      </p>
+      <hr>
+      <div class="hourbtn"><b>Hours: </b><br>
+        <p>
+
+          <input type="checkbox" id="h0ChkBx" name="hour" value="0" data-dojo-attach-point="h0ChkBx"
+            data-dojo-attach-event="onclick:updateCustomFilter" /> 0&nbsp;
+          <input type="checkbox" id="h1ChkBx" name="hour" value="1" data-dojo-attach-point="h1ChkBx"
+            data-dojo-attach-event="onclick:updateCustomFilter" /> 1&nbsp;
+          <input type="checkbox" id="h2ChkBx" name="hour" value="2" data-dojo-attach-point="h2ChkBx"
+            data-dojo-attach-event="onclick:updateCustomFilter" /> 2&nbsp;
+          <input type="checkbox" id="h3ChkBx" name="hour" value="3" data-dojo-attach-point="h3ChkBx"
+            data-dojo-attach-event="onclick:updateCustomFilter" /> 3&nbsp;
+          <input type="checkbox" id="h4ChkBx" name="hour" value="4" data-dojo-attach-point="h4ChkBx"
+            data-dojo-attach-event="onclick:updateCustomFilter" /> 4&nbsp;
+          <input type="checkbox" id="h5ChkBx" name="hour" value="5" data-dojo-attach-point="h5ChkBx"
+            data-dojo-attach-event="onclick:updateCustomFilter" /> 5&nbsp;
+          <input type="checkbox" id="h6ChkBx" name="hour" value="6" data-dojo-attach-point="h6ChkBx"
+            data-dojo-attach-event="onclick:updateCustomFilter" /> 6&nbsp;
+          <input type="checkbox" id="h7ChkBx" name="hour" value="7" data-dojo-attach-point="h7ChkBx"
+            data-dojo-attach-event="onclick:updateCustomFilter" /> 7&nbsp;
+          <input type="checkbox" id="h8ChkBx" name="hour" value="8" data-dojo-attach-point="h8ChkBx"
+            data-dojo-attach-event="onclick:updateCustomFilter" /> 8&nbsp;
+          <input type="checkbox" id="h9ChkBx" name="hour" value="9" data-dojo-attach-point="h9ChkBx"
+            data-dojo-attach-event="onclick:updateCustomFilter" /> 9&nbsp;
+          <input type="checkbox" id="h10ChkBx" name="hour" value="10" data-dojo-attach-point="h10ChkBx"
+            data-dojo-attach-event="onclick:updateCustomFilter" /> 10&nbsp;
+          <input type="checkbox" id="h11ChkBx" name="hour" value="11" data-dojo-attach-point="h11ChkBx"
+            data-dojo-attach-event="onclick:updateCustomFilter" /> 11&nbsp;
+          <input type="checkbox" id="h12ChkBx" name="hour" value="12" data-dojo-attach-point="h12ChkBx"
+            data-dojo-attach-event="onclick:updateCustomFilter" /> 12 <br>
+          <input type="checkbox" id="h13ChkBx" name="hour" value="13" data-dojo-attach-point="h13ChkBx"
+            data-dojo-attach-event="onclick:updateCustomFilter" /> 13&nbsp;
+          <input type="checkbox" id="h14ChkBx" name="hour" value="14" data-dojo-attach-point="h14ChkBx"
+            data-dojo-attach-event="onclick:updateCustomFilter" /> 14&nbsp;
+          <input type="checkbox" id="h15ChkBx" name="hour" value="15" data-dojo-attach-point="h15ChkBx"
+            data-dojo-attach-event="onclick:updateCustomFilter" /> 15&nbsp;
+          <input type="checkbox" id="h16ChkBx" name="hour" value="16" data-dojo-attach-point="h16ChkBx"
+            data-dojo-attach-event="onclick:updateCustomFilter" /> 16&nbsp;
+          <input type="checkbox" id="h17ChkBx" name="hour" value="17" data-dojo-attach-point="h17ChkBx"
+            data-dojo-attach-event="onclick:updateCustomFilter" /> 17&nbsp;
+          <input type="checkbox" id="h18ChkBx" name="hour" value="18" data-dojo-attach-point="h18ChkBx"
+            data-dojo-attach-event="onclick:updateCustomFilter" /> 18&nbsp;
+          <input type="checkbox" id="h19ChkBx" name="hour" value="19" data-dojo-attach-point="h19ChkBx"
+            data-dojo-attach-event="onclick:updateCustomFilter" /> 19&nbsp;
+          <input type="checkbox" id="h20ChkBx" name="hour" value="20" data-dojo-attach-point="h20ChkBx"
+            data-dojo-attach-event="onclick:updateCustomFilter" /> 20&nbsp;
+          <input type="checkbox" id="h21ChkBx" name="hour" value="21" data-dojo-attach-point="h21ChkBx"
+            data-dojo-attach-event="onclick:updateCustomFilter" /> 21&nbsp;
+          <input type="checkbox" id="h22ChkBx" name="hour" value="22" data-dojo-attach-point="h22ChkBx"
+            data-dojo-attach-event="onclick:updateCustomFilter" /> 22&nbsp;
+          <input type="checkbox" id="h23ChkBx" name="hour" value="23" data-dojo-attach-point="h23ChkBx"
+            data-dojo-attach-event="onclick:updateCustomFilter" /> 23&nbsp;
+        </p>
+      </div>
+      <br>
+    </div>
+
+    <div data-dojo-type="dijit/layout/ContentPane" title="Select Filter" id="selectTab">
+      <p>
+        <label x="30"><b>User:</b></label>
+        <input class="txtprompt" type="text" name="TheUser" placeholder="Username" id="TheUser"
+          data-dojo-attach-point="TheUser"><br>
+
+        <label x="30"><b>Current Filter: </b> </label>
+        <input class="txtprompt" type="text" name="CurrentFilter" placeholder="Log in to load filters"
+          id="CurrentFilter" data-dojo-attach-point="CurrentFilter"><br>
+
+        <label><b>Description: </b></label>
+        <input class="txtprompt" type="text" name="descripText" id="descripText" placeholder="None"
+          data-dojo-attach-point="descripText"><br>
+
+        <b>Available Filters: </b>
+        <select id="filterDropList" name="filterDropList" data-dojo-attach-point="filterDropList">
+          <OPTION SELECTED>none
+        </select>
+        <input type="button" class="greenButtons" id="reloadLayer" value=&#8634; title="Layer Reload"
+          data-dojo-attach-point="reloadLayer" style="font-size:14px; font-weight: bold; display:float; float:right" />
+        <div style=" background-color: #f2f2f2;">
+          <input type="button" id="datadump" value="Data Dump" class="greenButtons" data-dojo-attach-point="datadump"
+            style="display:float; float:right;" />
+          <b>Static Filters: </b>
+          <select id="staticFilterList" name="staticFilterList" data-dojo-attach-point="staticFilterList">
+            <OPTION VALUE="none">none</OPTION>
+            <OPTION VALUE="efspeed">effectivespeed</OPTION>
+            <OPTION VALUE="fltgrade">fleetdegrade</OPTION>
+            <OPTION VALUE="blueTime">bluetime</OPTION>
+            <OPTION VALUE="fleetFreeFlow">fleetfreeflow</OPTION>
+            <OPTION VALUE="fleetTYPDegrade">fleetTYPDegrade</OPTION>
+            <OPTION VALUE="fleetefSpeed">fleetefSpeed</OPTION>
+            <OPTION VALUE="spddeg">spddeg</OPTION>
+            <OPTION VALUE="timedeg">timedeg</OPTION>
+            <OPTION VALUE="typsum">typsum</OPTION>
+            <OPTION VALUE="typndow">typndow</OPTION>
+          </select>
+          <label><b>Day of Week</b></label>
+          <select id="staticDay" name="staticDay" data-dojo-attach-point="staticDay">
+            <OPTION VALUE="None" disabled selected>None</OPTION>
+            <OPTION VALUE="04">monday</OPTION>
+            <OPTION VALUE="05">tuesday</OPTION>
+            <OPTION VALUE="06">wednesday</OPTION>
+            <OPTION VALUE="07">thursday</OPTION>
+            <OPTION VALUE="01">friday</OPTION>
+            <OPTION VALUE="02">saturday</OPTION>
+            <OPTION VALUE="03">sunday</OPTION>
+          </select>
+          <label><b>Hour</b></label>
+          <input type="number" id="staticHour" name="staticHour" min="0" max="23">
+        </div>
+        <div id="srcDescription">
+          <div data-dojo-type="dijit/TitlePane" data-dojo-props="title:'Source Description', open:false, ">
+            <label>Description:</label><textarea rows="2" cols="30" id="description" type="text" name="Description"
+              maxlength="40" readonly></textarea>
+
+            <label>Total Record Count:</label><input id="TOTrecord" type="text" name="TOTrecord" maxlength="40"
+              readonly>
+
+            <label>Queried Record Count:</label><input id="queriedRecord" type="text" name="queriedRecord"
+              maxlength="40" readonly>
+
+          </div>
+        </div>
+      </p>
+
+      <div id="timeSliderDiv">
+      </div>
+
+      <hr>
+
+      <p>
+        <b>Current Route:</b>
+        <input class="txtprompt" type="text" name="routeName" placeholder="None" id="routeName"
+          data-dojo-attach-point="routeName" />
+
+        <br>
+
+        <b>Available Routes:</b>
+        <select id="routeDropList" name="routeDropList" data-dojo-attach-point="routeDropList">
+          <OPTION SELECTED>none
+        </select>
+        <br>
+
+        <label x="30"><b>trafficSql:</b></label>
+        <input type="text" name="trafficSQL" id="trafficSQL" value="" readonly data-dojo-attach-point="trafficSQL"
+          onchange="myFunction()">
+
+        <br>
+
+        <b>Custom SQL: </b>
+        <input class="txtprompt" type="text" name="custsqlInput" placeholder="Enter Custom SQL"
+          data-dojo-attach-point="customSQL" /><br>
+
+        <input type="button" name="saveselBut" id="saveselBut" value="Save RT Selection" class="greenButtons"
+          data-dojo-attach-point="saveselBut"
+          data-dojo-attach-event="onclick:saveRT" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+        <input type="button" name="deleteselBut" id="deleteselBut" value="Del RT Selection" class="redButtons"
+          data-dojo-attach-point="deleteselBut" /><br>
+
+        <input type="button" name="clearSQL" id="clearSQL" value="Clear Segments" class="redButtons"
+          data-dojo-attach-point="clearSQL" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+        <input type="button" name="csv" id="csv" value="Export to .csv" class="greenButtons"
+          data-dojo-attach-point="csv" />
+      </p>
+      <hr>
+
+      <div>
+        <b>Number of classes (max=10): </b>
+        <input type="text" name="classNum" placeholder="# of classes" id="classNum" style="width:75px"
+          data-dojo-attach-point="classNum" /><br>
+      </div>
+
+      <br>
+
+      <div id="fooBar" class="ThematicWindow"></div>
+
+      <!-- <p>
+        <b> S </b> <input type="checkbox" id="sChkBx" value="S" data-dojo-attach-point="sChkBx" />
+        <b> R </b> <input type="checkbox" id="rChkBx" value="R" data-dojo-attach-point="rChkBx" />
+        <b> L </b> <input type="checkbox" id="lChkBx" value="L" data-dojo-attach-point="lChkBx" />
+        <b> U </b> <input type="checkbox" id="uChkBx" value="U" data-dojo-attach-point="uChkBx" />
+
+        <br>
+      </p> -->
+      <div data-dojo-attach-point="selectW">
+        <div id="layerNode" class=" layer-node" data-dojo-attach-point="layerListNode">
+          <div style="display:none; position: absolute;" class=" select-dijit-container" id="selectWidget"
+            data-dojo-attach-point="selectDijitNode">
+            <div class="seperator"></div>
+          </div>
+          <div class="layer-nodes">
+            <div class="layer-items" data-dojo-attach-point="layerItemsNode"></div>
+          </div>
+        </div>
+      </div>
+      <div data-dojo-attach-point="detailsW">
+        <div class="details-node" data-dojo-attach-point="detailsNode">
+          <div class="header">
+            <div class="switch-back jimu-float-leading" data-dojo-attach-point="switchBackBtn">
+              <div class="feature-action" data-dojo-attach-point="switchBackIcon"></div>
+            </div>
+            <div class="layer-name" data-dojo-attach-point="selectedLayerName"></div>
+          </div>
+          <div class="content" data-dojo-attach-point="featureContent">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div data-dojo-type="dijit/layout/ContentPane" title="Static Filters" id="staticTab">
+      test content test content test content
+    </div>
+  </div>
+</div>

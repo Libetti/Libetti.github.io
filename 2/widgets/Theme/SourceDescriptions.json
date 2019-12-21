@@ -1,0 +1,11 @@
+{
+  "bluesep17typeffspd": "Bluetooth, Typical Week Averages for Travel Speeds",
+  "fleet1719freeflow": " State Vehicle GPS, Free Flow 2017 - 2019",
+  "fleet1719TYPNdegrade": "State Vehicle GPS, Typical Week % Degradation from Free Flow, Excludes Summer",
+  "fleet1719TYPNeffspd": "State Vehicle GPS, Typical Week Average Travel Speeds, Excludes Summer",
+  "npmrds17TYPNeffspd": "NPMRDS, Typical Week Averages for Travel Speeds, Excludes Summer",
+  "npmrds17TYPNspddeg": "NPMRDS, Typical Week % Speed Degradation from Free Flow,  Excludes Summer",
+  "npmrds17TYPNtimedeg": "NPMRDS, Typcical Week % Time degradation Excludes Summer",
+  "tmc1217typndow": "TMC Devices, Typical Volumes, Excludes Summer",
+  "tmc1217typsumdow": "TMC Devices, Typical Volumes, Includes Summer"
+}
