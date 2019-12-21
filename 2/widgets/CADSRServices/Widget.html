@@ -1,0 +1,302 @@
+<div data-dojo-type="dijit/layout/ContentPane" style="position:relative;height:100%;">
+  <style>
+    label {
+      display: block;
+      text-align: justify;
+    }
+
+    label optgroup {
+      font-weight: bolder;
+    }
+
+    li.list-group-item {
+      padding: 0px
+    }
+
+    hr {
+      background-color: #f2f2f2;
+      background-image: linear-gradient(to right,
+          rgba(0, 0, 0, 0),
+          rgba(0, 0, 0, 0.75),
+          rgba(0, 0, 0, 0));
+      border: 0;
+      height: 1px;
+    }
+
+    u {
+      text-decoration: underline;
+    }
+
+    #catss.row {
+      margin-right: 0 !important;
+    }
+
+    #catss label {
+      vertical-align: middle;
+    }
+
+    .bootstrap-select {
+      border-bottom-style: inset;
+    }
+
+    .categorySelector {
+      border-style: solid;
+      border-color: black;
+      border-width: thin;
+      min-height: 2rem;
+      max-height: 7rem;
+      overflow-y: scroll;
+    }
+
+    .claro .dijitTitlePaneContentOuter {
+      border-top: none;
+      border-right: none;
+      border-left: none;
+    }
+
+    .color-header {
+      background-color: #00539F !important;
+    }
+
+    /* .claro .dijitTitlePaneTitle {
+    } */
+
+    .flex_Container {
+      display: flex;
+      flex-wrap: wrap;
+      flex-direction: row;
+      justify-content: flex-start;
+    }
+
+    .flex_Container>div {
+      padding: 1em;
+      justify-content: flex-start;
+    }
+
+    #dateSelector {
+      display: flex;
+      justify-content: first baseline;
+    }
+
+    #dateSelector>div {
+      margin: 5px;
+    }
+
+
+    .filter-option-inner {
+      font-size: 0.75em;
+    }
+
+    #CADSRLayerList {
+      width: auto;
+      max-width: auto;
+    }
+
+    #srcDescription {
+      display: inline-block;
+      width: 100%;
+    }
+
+    #selectedCat {
+      display: block;
+    }
+
+    .jimu-widget-frame.jimu-container {
+      padding: 0px 0px 0px 0px;
+      overflow: hidden;
+    }
+
+    .jimu-panel-title {
+      background-color: #00539F;
+      padding-bottom: 3px;
+    }
+
+    a.span4 {
+      color: #ffffff;
+    }
+
+    a.span12 {
+      color: #ffffff;
+    }
+
+    .list-group {
+      max-height: 150px;
+      margin-bottom: 10px;
+      overflow-x: visible;
+      margin-left: 0;
+    }
+
+    .copyright {
+      bottom: 0%;
+      justify-content: space-evenly;
+      position: absolute;
+      background-color: #00539F;
+      border-top-style: solid;
+      border-top-color: #ffd200;
+      border-width: thick;
+    }
+
+    .bootstrap-select .bs-ok-default::after {
+      width: 0.3em;
+      height: 0.6em;
+      border-width: 0 0.1em 0.1em 0;
+      transform: rotate(45deg) translateY(0.5rem);
+    }
+
+    #dateSelector {
+      display: flex;
+      justify-content: first baseline;
+    }
+
+    .dropdown-menu li {
+      padding: 3px;
+      font-size: 0.75em;
+      max-width: auto;
+    }
+
+    .dropdown-menu li a span.text {
+      max-width: auto;
+      overflow-wrap: break-word;
+      word-wrap: break-word;
+      white-space: normal;
+      border-bottom-style: groove;
+    }
+
+    .dropdown-header {
+      color: black;
+      font-weight: bolder;
+    }
+
+    .tight-gutter {
+      padding: 0 2px;
+    }
+
+    .widget-icon>img {
+      vertical-align: top;
+    }
+  </style>
+  <div class="p-2">
+    Layer Category Selector:
+  </div>
+  <ul id="catss" class="list-group list-group-flush row p-2">
+    <li class="list-group-item">
+      <div class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input col-xs-6" id="Traffic Measures" />
+        <label class="custom-control-label" for="Traffic Measures">Traffic Measures</label>
+      </div>
+    </li>
+    <li class="list-group-item">
+      <div class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input col-xs-6" id="Transportation" />
+        <label class="custom-control-label" for="Transportation">Transportation</label>
+      </div>
+    </li>
+    <li class="list-group-item">
+      <div class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input col-xs-6" id="Demographics" />
+        <label class="custom-control-label" for="Demographics">Demographics</label>
+      </div>
+    </li>
+    <li class="list-group-item">
+      <div class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input col-xs-6" id="Destinations and Accessibility" />
+        <label class="custom-control-label" for="Destinations and Accessibility">Destinations and Accessibility</label>
+      </div>
+    </li>
+    <li class="list-group-item">
+      <div class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input col-xs-6" id="Emergency Management" />
+        <label class="custom-control-label" for="Emergency Management">Emergency Management</label>
+      </div>
+    </li>
+    <li class="list-group-item">
+      <div class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input col-xs-6" id="Schools" />
+        <label class="custom-control-label" for="School">Schools</label>
+      </div>
+    </li>
+    <li class="list-group-item">
+      <div class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input col-xs-6" id="Projections" />
+        <label class="custom-control-label" for="Projections">Projections</label>
+      </div>
+    </li>
+    <li class="list-group-item">
+      <div class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input col-xs-6" id="Boundaries" />
+        <label class="custom-control-label" for="Boundaries">Boundaries</label>
+      </div>
+    </li>
+    <li class="list-group-item">
+      <div class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input col-xs-6" id="Other Categories" />
+        <label class="custom-control-label" for="Other Categories">Other Categories</label>
+      </div>
+    </li>
+  </ul>
+
+  <div class="mx-auto px-2">
+    <select multiple id="CADSRLayerList" title="Select a category" data-width="100%" data-size="7"
+      data-style="bg-white rounded-pill" class="selectpicker large-bootstrap-select h-10 w-95 mw-95"
+      data-selected-text-format="count > 3">
+    </select>
+  </div>
+
+  <form class="mx-auto container-fluid form-inline p-1">
+    <div id="dateSelector" class="mx-auto row-fluid" data-dojo-attach-point="dateSelector">
+      <div class="col-xs-2 input-sm">
+        <label for="day">Day of Week</label>
+        <select class="form-control" id="day">
+          <option value="01">Monday</option>
+          <option value="02">Tuesday</option>
+          <option value="03">Wednesday</option>
+          <option value="04">Thursday</option>
+          <option value="05">Friday</option>
+          <option value="06">Saturday</option>
+          <option value="07">Sunday</option>
+        </select>
+      </div>
+      <form class="form-inline">
+        <div class="col-xs-1  input-sm">
+          <label for="hour">Hour</label>
+          <input class="form-control" type="number" id="hour" name="hour" min="0" max="23" placeholder="None" />
+        </div>
+      </form>
+      <div class="col-xs-1  input-sm">
+        <label for="year">Year</label>
+        <input class="form-control" type="number" id="year" name="year" min="2015" max="2019" step="1"
+          placeholder="None" />
+      </div>
+    </div>
+  </form>
+
+  <hr />
+
+  <div class="description p-1" id="description">Layer Descriptions:</div>
+  <div id="anonymousPanel" style="display: none; padding: 5px; text-align: center;">
+    <span id="sign-in" class="action">Sign In</span> and view your ArcGIS Online items.
+  </div>
+
+  <div id="personalizedPanel" style="display: none; padding: 5px; text-align: center;">
+    Welcome <span id="userId" style="font-weight: bold;"></span>
+    -
+    <span id="sign-out" class="action">Sign Out</span>
+  </div>
+
+  <div id="itemGallery" class="esri-item-gallery" style="width: 100%;"></div>
+  <div class="copyright container-fluid .text-dark" style="float:left">
+    <div class="row-fluid" style="justify-content: space-evenly; text-align: center">
+      <a href="#" class="span4  p-3" data-toggle="popover" title="Contact Us" data-trigger="focus" data-content="University of Delaware - Center for Applied Demography and Survey Research
+          Authors: David Racca, Anthony Libetti
+          November 2019" data-placement="bottom">Contact Us</a>
+      <a href="#" class="span4 p-3" data-toggle="popover" title="Terms of Service" data-trigger="focus"
+        data-content="Some content inside the popover" data-placement="bottom">Terms of Service</a>
+      <a href="#" class="span4  p-3" data-toggle="popover" title="Help" data-trigger="focus"
+        data-content="<a href='https://github.com/Libetti/CADSRServicesReadme/blob/master/README.md'>README</a>"
+        data-placement="bottom">Help</a>
+      <div class="row-fluid">
+        <a class="span12" target="_blank" href="http://www.cadsr.udel.edu/default.cfm">
+          &#169 CADSRGIS</a>
+      </div>
+    </div>
+  </div>

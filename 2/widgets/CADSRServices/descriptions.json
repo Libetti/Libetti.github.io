@@ -1,0 +1,356 @@
+{
+  "Transportation": {
+    "BlueTypEffSpeed": {
+      "Sub_Category": "Time Enabled",
+      "Source": "Bluetooth",
+      "url": "https://cadsrgis.org/arcgis/rest/services/trafdata/bluesep17typeffspd/MapServer",
+      "Description": "Bluetooth, Typical Week Averages for Travel Speeds",
+      "Name": "BlueTypEffSpeed",
+      "Time_Extent": {
+        "layer_def": "false",
+        "day_range": "7",
+        "dow": "DAY",
+        "hour": "HOUR",
+        "year": "2017"
+      }
+    },
+    "FleetDegrade_traf": {
+      "Source": "Fleet",
+      "Sub_Category": "Not Time Enabled",
+      "url": "https://cadsrgis.org/arcgis/rest/services/traf/fleetdegrade/MapServer",
+      "Description": "State Vehicle GPS, Typical Week % Degradation from Free Flow, Excludes Summer",
+      "Name": "FleetDegrade_traf",
+      "Time_Extent": {
+        "layer_def": "false",
+        "day_range": "4",
+        "dow": "cadsrdb_DBO_fltsegnotsum_DAY",
+        "hour": "cadsrdb_DBO_fltsegnotsum_HOUR",
+        "year": "2019"
+      }
+    },
+    "FleetTYPNSumDegrade": {
+      "Source": "Fleet",
+      "url": "https://cadsrgis.org/arcgis/rest/services/trafdata/fleet1719TYPNdegrade/MapServer",
+      "Description": "State Vehicle GPS, Typical Week % Degradation from Free Flow, Excludes Summer",
+      "Name": "FleetTYPNSumDegrade",
+      "Time_Extent": {
+        "layer_def": "false",
+        "day_range": "4",
+        "dow": "cadsrdb_DBO_fltsegnotsum_DAY",
+        "hour": "cadsrdb_DBO_fltsegnotsum_HOUR",
+        "year": "2019"
+      }
+    },
+
+    "FleetTypNSumEffSpeed": {
+      "Source": "Fleet",
+      "url": "https://cadsrgis.org/arcgis/rest/services/trafdata/fleet1719TYPNeffspd/MapServer",
+      "Description": "State Vehicle GPS, Typical Week Average Travel Speeds, Excludes Summer",
+      "Name": "FleetTypNSumEffSpeed",
+      "Time_Extent": {
+        "layer_def": "false",
+        "day_range": "4",
+        "dow": "cadsrdb_DBO_fleetweeknot_DAY",
+        "hour": "cadsrdb_DBO_fleetweeknot_HOUR",
+        "year": "2019"
+      }
+    },
+
+    "NPMRDSTypNSumEffSpd": {
+      "Source": "NPMRDS",
+      "url": "https://utility.arcgis.com/usrsvcs/servers/11b1b4f3b8624553a6e05aded38d2a92/rest/services/trafdata/npmrds17TYPNeffspd/MapServer",
+      "Description": "NPMRDS, Typical Average Week Travel Speeds, Excludes Summer",
+      "Name": "NPMRDSTypNSumEffSpd",
+      "Time_Extent": {
+        "layer_def": "false",
+        "day_range": "4",
+        "dow": "np17notweekday_DAY",
+        "hour": "np17notweekday_HOUR",
+        "year": "2017"
+      }
+    },
+
+    "NPMRDSTypSpdDegrade": {
+      "Source": "NPMRDS",
+      "url": "https://cadsrgis.org/arcgis/rest/services/trafdata/npmrds17TYPNspddeg/MapServer/",
+      "Description": "NPMRDS, Typical Week % Speed Degradation from Free Flow,  Excludes Summer",
+      "Name": "NPMRDSTypSpdDegrade",
+      "Time_Extent": {
+        "layer_def": "false",
+        "day_range": "4",
+        "dow": "np17notweekday_DAY",
+        "hour": "np17notweekday_HOUR",
+        "year": "2017"
+      }
+    },
+
+    "NPMRDSTypTimeDegrade": {
+      "Source": "NPMRDS",
+      "url": "https://cadsrgis.org/arcgis/rest/services/trafdata/npmrds17TYPNtimedeg/MapServer/",
+      "Description": "NPMRDS, Typcical Week % Time degradation Excludes Summer",
+      "Name": "NPMRDSTypTimeDegrade",
+      "Time_Extent": {
+        "layer_def": "false",
+        "day_range": "4",
+        "dow": "np17notweekday_DAY",
+        "hour": "np17notweekday_HOUR",
+        "year": "2017"
+      }
+    },
+
+    "TMCTypSumVolume": {
+      "Source": "TMC",
+      "url": "https://cadsrgis.org/arcgis/rest/services/trafdata/tmc1217typsumdow/MapServer/",
+      "Description": "TMC Devices, Typical Volumes, Includes Summer",
+      "Name": "TMCTypSumVolume",
+      "Time_Extent": {
+        "layer_def": "false",
+        "day_range": "7",
+        "dow": "tmc1218typsum_DAY",
+        "hour": "tmc1218typsum_HOUR",
+        "year": "2017"
+      }
+    },
+
+    "TMCTypNSumVolume": {
+      "Source": "TMC",
+      "url": "https://cadsrgis.org/arcgis/rest/services/trafdata/tmc1217typndow/MapServer/",
+      "Description": "TMC Devices, Typical Volumes, Excludes Summer",
+      "Name": "TMCTypNSumVolume",
+      "Time_Extent": {
+        "layer_def": "false",
+        "day_range": "7",
+        "dow": "tmc1218typndow_DAY",
+        "hour": "tmc1218typndow_HOUR",
+        "year": "2017"
+      }
+    },
+
+    "FleetFreeFlow_trafdata": {
+      "Source": "Fleet",
+      "url": "https://cadsrgis.org/arcgis/rest/services/trafdata/fleet1719freeflow/MapServer",
+      "Description": "State Vehicle GPS, Free Flow 2017 - 2019",
+      "Name": "FleetFreeFlow_trafdata",
+      "Time_Extent": {
+        "day_range": "0",
+        "layer_def": "false",
+        "dow": "",
+        "hour": "",
+        "year": ""
+      }
+    },
+    "FleetFreeFlow_traf": {
+      "Source": "Fleet",
+      "url": "https://cadsrgis.org/arcgis/rest/services/traf/fleetfreeflow/MapServer",
+      "Description": "State Vehicle GPS, Free Flow 2017 - 2019",
+      "Name": "FleetFreeFlow_traf",
+      "Time_Extent": {
+        "layer_def": "false",
+        "day_range": "0",
+        "dow": "",
+        "hour": "",
+        "year": ""
+      }
+    },
+    "EffectiveSpeed_traf": {
+      "Source": "Fleet",
+      "url": "https://cadsrgis.org/arcgis/rest/services/traf/effectivespeed/MapServer",
+      "Description": "Effective Speed",
+      "Name": "EffectiveSpeed_traf",
+      "Time_Extent": {
+        "layer_def": "false",
+        "day_range": "4",
+        "dow": "cadsrdb_DBO_fleetweeknot_DAY",
+        "hour": "cadsrdb_DBO_fleetweeknot_HOUR",
+        "year": "2019"
+      }
+    },
+    "LAYERDEF_TEST": {
+      "Source": "Fleet",
+      "url": "https://cadsrgis.org/arcgis/rest/services/trafdata/fleetnotime/MapServer",
+      "Description": "{LAYERDEF_TEST}",
+      "Name": "LAYERDEF_TEST",
+      "Time_Extent": {
+        "layer_def": "true",
+        "day_range": "4",
+        "dow": "cadsrdb_DBO_fleetweeknot_DAY",
+        "hour": "cadsrdb_DBO_fleetweeknot_HOUR",
+        "year": "2017"
+      }
+    }
+  },
+
+  "Traffic Measures": {
+    "PLACEHOLDER1": {
+      "Source": "1",
+      "url": "11",
+      "Description": "111",
+      "Name": "12",
+      "Time_Extent": {
+        "layer_def": "",
+        "dow": "",
+        "hour": "",
+        "year": ""
+      }
+    },
+    "PLACEHOLDER2": {
+      "Source": "2",
+      "url": "22",
+      "Description": "222",
+      "Name": "123",
+      "Time_Extent": {
+        "layer_def": "",
+        "dow": "",
+        "hour": "",
+        "year": ""
+      }
+    },
+    "PLACEHOLDER3": {
+      "Source": "3",
+      "url": "33",
+      "Description": "333",
+      "Name": "1234",
+      "Time_Extent": {
+        "layer_def": "",
+        "dow": "",
+        "hour": "",
+        "year": ""
+      }
+    }
+  },
+  "Demographics": {
+    "PLACEHOLDER12": {
+      "Source": "4",
+      "url": "44",
+      "Description": "444",
+      "Name": "12345",
+      "Time_Extent": {
+        "layer_def": "",
+        "dow": "",
+        "hour": "",
+        "year": ""
+      }
+    },
+    "PLACEHOLDER22": {
+      "Source": "5",
+      "url": "55",
+      "Description": "555",
+      "Name": "123456",
+      "Time_Extent": {
+        "layer_def": "",
+        "dow": "",
+        "hour": "",
+        "year": ""
+      }
+    },
+
+    "PLACEHOLDER32": {
+      "Source": "6",
+      "url": "66",
+      "Description": "665",
+      "Name": "1234567",
+      "Time_Extent": {
+        "layer_def": "",
+        "dow": "",
+        "hour": "",
+        "year": ""
+      }
+    }
+  },
+  "Destinations and Accessibility": {
+    "DESTINATIONS PLACEHOLDER": {
+      "Sub_Category": "Time Enabled",
+      "Source": "Bluetooth",
+      "url": "https://cadsrgis.org/arcgis/rest/services/trafdata/bluesep17typeffspd/MapServer",
+      "Description": "Bluetooth, Typical Week Averages for Travel Speeds",
+      "Name": "BlueTypEffSpeed",
+      "Time_Extent": {
+        "layer_def": "false",
+        "day_range": "7",
+        "dow": "DAY",
+        "hour": "HOUR",
+        "year": "2017"
+      }
+    }
+  },
+  "Emergency Management": {
+    "EMERGENCY PLACEHOLDER": {
+      "Sub_Category": "Time Enabled",
+      "Source": "Bluetooth",
+      "url": "https://cadsrgis.org/arcgis/rest/services/trafdata/bluesep17typeffspd/MapServer",
+      "Description": "Bluetooth, Typical Week Averages for Travel Speeds",
+      "Name": "BlueTypEffSpeed",
+      "Time_Extent": {
+        "layer_def": "false",
+        "day_range": "7",
+        "dow": "DAY",
+        "hour": "HOUR",
+        "year": "2017"
+      }
+    }
+  },
+  "Schools": {
+    "SCHOOLS PLACEHOLDER": {
+      "Sub_Category": "Time Enabled",
+      "Source": "Bluetooth",
+      "url": "https://cadsrgis.org/arcgis/rest/services/trafdata/bluesep17typeffspd/MapServer",
+      "Description": "Bluetooth, Typical Week Averages for Travel Speeds",
+      "Name": "BlueTypEffSpeed",
+      "Time_Extent": {
+        "layer_def": "false",
+        "day_range": "7",
+        "dow": "DAY",
+        "hour": "HOUR",
+        "year": "2017"
+      }
+    }
+  },
+  "Projections": {
+    "PROJECTIONS PLACEHOLDER": {
+      "Sub_Category": "Time Enabled",
+      "Source": "Bluetooth",
+      "url": "https://cadsrgis.org/arcgis/rest/services/trafdata/bluesep17typeffspd/MapServer",
+      "Description": "Bluetooth, Typical Week Averages for Travel Speeds",
+      "Name": "BlueTypEffSpeed",
+      "Time_Extent": {
+        "layer_def": "false",
+        "day_range": "7",
+        "dow": "DAY",
+        "hour": "HOUR",
+        "year": "2017"
+      }
+    }
+  },
+  "Boundaries": {
+    "BOUNDARIES PLACEHOLDER": {
+      "Sub_Category": "Time Enabled",
+      "Source": "Bluetooth",
+      "url": "https://cadsrgis.org/arcgis/rest/services/trafdata/bluesep17typeffspd/MapServer",
+      "Description": "Bluetooth, Typical Week Averages for Travel Speeds",
+      "Name": "BlueTypEffSpeed",
+      "Time_Extent": {
+        "layer_def": "false",
+        "day_range": "7",
+        "dow": "DAY",
+        "hour": "HOUR",
+        "year": "2017"
+      }
+    }
+  },
+  "Other Categories": {
+    "OTHER PLACEHOLDERS": {
+      "Sub_Category": "Time Enabled",
+      "Source": "Bluetooth",
+      "url": "https://cadsrgis.org/arcgis/rest/services/trafdata/bluesep17typeffspd/MapServer",
+      "Description": "Bluetooth, Typical Week Averages for Travel Speeds",
+      "Name": "BlueTypEffSpeed",
+      "Time_Extent": {
+        "layer_def": "false",
+        "day_range": "7",
+        "dow": "DAY",
+        "hour": "HOUR",
+        "year": "2017"
+      }
+    }
+  }
+}

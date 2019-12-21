@@ -1,0 +1,82 @@
+footer#udFooter {
+  width: 100%;
+  background-color: #fff;
+  border-top: 3px solid #ffd300;
+  clear: both;
+  max-height: 50px;
+}
+
+/* This footer max-width may be altered to match the width of your site content/container */
+footer#udFooter .udFooter-container {
+  max-width: 1140px;
+}
+
+footer#udFooter .udFooter-container {
+  width: 100%;
+  margin: auto;
+  position: relative;
+}
+footer#udFooter #udFooterLogo {
+  width: 129px;
+  position: absolute;
+  left: 0;
+  z-index: 2;
+}
+
+footer#udFooter .udFooterHeader {
+  float: right;
+  width: 100%;
+}
+footer#udFooter ul.udFooterSocial-icons {
+  padding: 0;
+  margin: 8px 5px 0 0;
+  list-style: none;
+  float: right;
+}
+
+footer#udFooter .udFooterLinks {
+  width: 100%;
+  margin: 124px auto 0 auto;
+  background-color: #eee;
+  clear: both;
+}
+
+footer#udFooter .udFooterLinks div {
+  font-family: Arial;
+  font-size: 10px;
+  color: #000000;
+  margin: auto;
+  text-align: center;
+}
+
+footer#udFooter .udFooterLinks div a {
+  color: #005aad;
+}
+footer#udFooter .link-item {
+  padding: 8px 10px 10px 0;
+  display: inline-block;
+  margin: auto;
+}
+footer#udFooter .container-fluid {
+  width: 80%;
+  text-align: center;
+}
+
+@media only screen and (max-width: 1200px) {
+  footer#udFooter #udFooterLogo {
+    left: 15px;
+  }
+}
+
+@media only screen and (max-width: 748px) {
+  footer#udFooter .udFooterHeader {
+    float: none;
+    width: auto;
+  }
+  footer#udFooter #udFooterLogo {
+    width: 65px;
+    margin: auto;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
