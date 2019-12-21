@@ -58,12 +58,12 @@ Global functions:
 /*global testLoad, ActiveXObject */
 var
   //    the URL of the ArcGIS API for JavaScript, you can change it to point to your own API.
-  apiUrl = null,
+  apiUrl = '//js.arcgis.com/3.14';
 
-  //weinreUrl: String
-  //    weinre is a tool which can help debug the app on mobile devices.
-  //    Please see: http://people.apache.org/~pmuellr/weinre/docs/latest/Home.html
-  weinreUrl = '//launch.chn.esri.com:8081/target/target-script-min.js',
+//weinreUrl: String
+//    weinre is a tool which can help debug the app on mobile devices.
+//    Please see: http://people.apache.org/~pmuellr/weinre/docs/latest/Home.html
+weinreUrl = '//launch.chn.esri.com:8081/target/target-script-min.js',
 
   //debug: Boolean
   //    If it's debug mode, the app will load weinre file
@@ -97,7 +97,7 @@ var
 
 /////////////////////////////////////
 
-(function(global){
+(function (global) {
   //init API URL
   var queryObject = getQueryObject();
   var apiVersion = '3.30';
@@ -110,24 +110,24 @@ var
   allCookies = getAllCookies();
 
   if (queryObject.apiurl) {
-    if(!checkApiUrl(queryObject.apiurl)){
+    if (!checkApiUrl(queryObject.apiurl)) {
       console.error('?apiurl must point to an ULR that is in the app or in esri.com/arcgis.com domain.');
       return;
     }
     apiUrl = queryObject.apiurl;
   }
-  window.appInfo = {isRunInPortal: !isXT};
+  window.appInfo = { isRunInPortal: !isXT };
   if (!apiUrl) {
     if (isXT) {
       apiUrl = 'https://js.arcgis.com/' + apiVersion;
     } else {
       var portalUrl = getPortalUrlFromLocation();
       if (portalUrl.indexOf('arcgis.com') > -1) {
-        if(portalUrl.indexOf('devext.arcgis.com') > -1){
+        if (portalUrl.indexOf('devext.arcgis.com') > -1) {
           apiUrl = '//jsdev.arcgis.com/' + apiVersion;
-        }else if(portalUrl.indexOf('qa.arcgis.com') > -1){
+        } else if (portalUrl.indexOf('qa.arcgis.com') > -1) {
           apiUrl = '//jsqa.arcgis.com/' + apiVersion;
-        }else{
+        } else {
           apiUrl = '//js.arcgis.com/' + apiVersion;
         }
 
@@ -144,14 +144,14 @@ var
 
   path = getPath();
 
-  function getAllCookies(){
+  function getAllCookies() {
     var strAllCookie = document.cookie;
     var cookies = {};
     if (strAllCookie) {
       var strCookies = strAllCookie.split(';');
-      for(var i = 0; i < strCookies.length; i++){
+      for (var i = 0; i < strCookies.length; i++) {
         var splits = strCookies[i].split('=');
-        if(splits && splits.length > 1){
+        if (splits && splits.length > 1) {
           cookies[splits[0].replace(/^\s+|\s+$/gm, '')] = splits[1];
         }
       }
@@ -159,27 +159,27 @@ var
     return cookies;
   }
 
-  function checkApiUrl(url){
-    if(/^\/\//.test(url) || /^https?:\/\//.test(url)){
+  function checkApiUrl(url) {
+    if (/^\/\//.test(url) || /^https?:\/\//.test(url)) {
       return /(?:[\w\-\_]+\.)+(?:esri|arcgis)\.com/.test(url); //api url must be in esri.com or arcgis.com
-    }else{
+    } else {
       return true;
     }
   }
 
-  function getPortalUrlFromLocation(){
-    var portalUrl = getPortalServerFromLocation() +  getDeployContextFromLocation();
+  function getPortalUrlFromLocation() {
+    var portalUrl = getPortalServerFromLocation() + getDeployContextFromLocation();
     return portalUrl;
   }
 
-  function getPortalServerFromLocation(){
+  function getPortalServerFromLocation() {
     var server = window.location.protocol + '//' + window.location.host;
     return server;
   }
 
-  function getDeployContextFromLocation (){
+  function getDeployContextFromLocation() {
     var keyIndex = window.location.href.indexOf("/home/");
-    if(keyIndex < 0){
+    if (keyIndex < 0) {
       keyIndex = window.location.href.indexOf("/apps/");
     }
     var context = window.location.href.substring(window.location.href.indexOf(
@@ -196,11 +196,11 @@ var
     fullPath = window.location.pathname;
     if (fullPath === '/' || fullPath.substr(fullPath.length - 1) === '/') {
       path = fullPath;
-    }else{
+    } else {
       var sections = fullPath.split('/');
       var lastSection = sections.pop();
       if (/\.html$/.test(lastSection) || /\.aspx$/.test(lastSection) ||
-         /\.jsp$/.test(lastSection) || /\.php$/.test(lastSection)) {
+        /\.jsp$/.test(lastSection) || /\.php$/.test(lastSection)) {
         //index.html may be renamed to index.jsp, etc.
         path = sections.join('/') + '/';
       } else {
@@ -210,14 +210,14 @@ var
     return path;
   }
 
-  function getQueryObject(){
+  function getQueryObject() {
     var query = window.location.search;
     if (query.indexOf('?') > -1) {
       query = query.substr(1);
     }
     var pairs = query.split('&');
     var queryObject = {};
-    for(var i = 0; i < pairs.length; i++){
+    for (var i = 0; i < pairs.length; i++) {
       var splits = decodeURIComponent(pairs[i]).split('=');
       queryObject[splits[0]] = splits[1];
     }
@@ -229,7 +229,7 @@ var
       fp = Function.prototype,
       sp = String.prototype,
       loaded = 0,
-      completeCb = function() {
+      completeCb = function () {
         loaded++;
         if (loaded === tests.length) {
           cb();
@@ -278,16 +278,16 @@ var
         callback: completeCb
       }];
 
-    for(var i = 0; i < tests.length; i++){
+    for (var i = 0; i < tests.length; i++) {
       testLoad(tests[i]);
     }
   }
 
-  function localeIsSame(locale1, locale2){
+  function localeIsSame(locale1, locale2) {
     return locale1.split('-')[0] === locale2.split('-')[0];
   }
 
-  function _setRTL(locale){
+  function _setRTL(locale) {
     var rtlLocales = ["ar", "he"];
     var dirNode = document.getElementsByTagName("html")[0];
     var isRTLLocale = false;
@@ -303,7 +303,7 @@ var
       dirNode.className += " esriRtl jimu-rtl";
       dirNode.className += " " + locale + " " +
         (locale.indexOf("-") !== -1 ? locale.split("-")[0] : "");
-    }else {
+    } else {
       dirNode.setAttribute("dir", "ltr");
       dirNode.className += " esriLtr jimu-ltr";
       dirNode.className += " " + locale + " " +
@@ -317,34 +317,34 @@ var
   global.queryObject = queryObject;
   global._setRTL = _setRTL;
 
-  global.avoidRequireCache = function(require){
+  global.avoidRequireCache = function (require) {
     var dojoInject = require.injectUrl;
-    require.injectUrl = function(url, callback, owner){
+    require.injectUrl = function (url, callback, owner) {
       url = appendDeployVersion(url);
       dojoInject(url, callback, owner);
     };
   };
 
-  global.avoidRequestCache = function (aspect, requestUtil){
-    aspect.after(requestUtil, 'parseArgs', function(args){
+  global.avoidRequestCache = function (aspect, requestUtil) {
+    aspect.after(requestUtil, 'parseArgs', function (args) {
       args.url = appendDeployVersion(args.url);
       return args;
     });
   };
 
-  function appendDeployVersion(url){
-    if(/^http(s)?:\/\//.test(url) || /^\/proxy\.js/.test(url) || /^\/\//.test(url)){
+  function appendDeployVersion(url) {
+    if (/^http(s)?:\/\//.test(url) || /^\/proxy\.js/.test(url) || /^\/\//.test(url)) {
       return url;
     }
-    if(url.indexOf('?') > -1){
+    if (url.indexOf('?') > -1) {
       url = url + '&wab_dv=' + deployVersion;
-    }else{
+    } else {
       url = url + '?wab_dv=' + deployVersion;
     }
     return url;
   }
 
-  var _detectUserAgent = function() {
+  var _detectUserAgent = function () {
     var os = {}, browser = {},
       ua = navigator.userAgent, platform = navigator.platform,
       webkit = ua.match(/Web[kK]it[\/]{0,1}([\d.]+)/),
@@ -455,17 +455,17 @@ var
     }
 
     os.tablet = !!(ipad || playbook || (android && !ua.match(/Mobile/)) ||
-    (firefox && ua.match(/Tablet/)) || (ie && !ua.match(/Phone/) && ua.match(/Touch/)));
+      (firefox && ua.match(/Tablet/)) || (ie && !ua.match(/Phone/) && ua.match(/Touch/)));
     os.phone = !!(!os.tablet && !os.ipod && (android || iphone || webos || blackberry || bb10 ||
-    (chrome && ua.match(/Android/)) || (chrome && ua.match(/CriOS\/([\d.]+)/)) ||
-    (firefox && ua.match(/Mobile/)) || (ie && ua.match(/Touch/))));
+      (chrome && ua.match(/Android/)) || (chrome && ua.match(/CriOS\/([\d.]+)/)) ||
+      (firefox && ua.match(/Mobile/)) || (ie && ua.match(/Touch/))));
 
     return {
       os: os,
       browser: browser
     };
   };
-  var _isMobileUa = function() {
+  var _isMobileUa = function () {
     var uaInfo = global.userAgent;
     if (true === uaInfo.os.phone || true === uaInfo.os.tablet) {
       return true;
